@@ -1,0 +1,2259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Speech Rate Calculator Pro</title>
+   <style>
+       /* ==========================================================================
+          1. CSS VARIABLES & THEME SYSTEM
+          ========================================================================== */
+       :root {
+           --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+           --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+           
+           /* Default Theme - Light Professional */
+           --bg-main: #f8f9fa;
+           --bg-surface: #ffffff;
+           --bg-surface-hover: #f1f3f4;
+           --bg-accent: #e8f0fe;
+           --text-primary: #202124;
+           --text-secondary: #5f6368;
+           --text-accent: #1a73e8;
+           --border-color: #dadce0;
+           --shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+           --shadow-lg: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 2px 6px 2px rgba(60, 64, 67, 0.15);
+           --border-radius: 8px;
+           --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+       }
+
+       /* 7 Premium Themes */
+       .theme-dark {
+           --bg-main: #121212;
+           --bg-surface: #1e1e1e;
+           --bg-surface-hover: #2a2a2a;
+           --bg-accent: #2d2d2d;
+           --text-primary: #e8eaed;
+           --text-secondary: #9aa0a6;
+           --text-accent: #8ab4f8;
+           --border-color: #3c4043;
+           --shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.6), 0 1px 3px 1px rgba(0, 0, 0, 0.5);
+           --shadow-lg: 0 1px 2px 0 rgba(0, 0, 0, 0.6), 0 2px 6px 2px rgba(0, 0, 0, 0.5);
+       }
+
+       .theme-ocean {
+           --bg-main: #e0f7fa;
+           --bg-surface: #ffffff;
+           --bg-surface-hover: #b2ebf2;
+           --bg-accent: #80deea;
+           --text-primary: #006064;
+           --text-secondary: #00838f;
+           --text-accent: #0097a7;
+           --border-color: #4dd0e1;
+           --shadow: 0 1px 2px 0 rgba(0, 150, 136, 0.3), 0 1px 3px 1px rgba(0, 150, 136, 0.15);
+           --shadow-lg: 0 1px 2px 0 rgba(0, 150, 136, 0.3), 0 2px 6px 2px rgba(0, 150, 136, 0.15);
+       }
+
+       .theme-forest {
+           --bg-main: #e8f5e9;
+           --bg-surface: #ffffff;
+           --bg-surface-hover: #c8e6c9;
+           --bg-accent: #a5d6a7;
+           --text-primary: #1b5e20;
+           --text-secondary: #388e3c;
+           --text-accent: #43a047;
+           --border-color: #81c784;
+           --shadow: 0 1px 2px 0 rgba(76, 175, 80, 0.3), 0 1px 3px 1px rgba(76, 175, 80, 0.15);
+           --shadow-lg: 0 1px 2px 0 rgba(76, 175, 80, 0.3), 0 2px 6px 2px rgba(76, 175, 80, 0.15);
+       }
+
+       .theme-sunset {
+           --bg-main: #fff3e0;
+           --bg-surface: #ffffff;
+           --bg-surface-hover: #ffe0b2;
+           --bg-accent: #ffcc80;
+           --text-primary: #e65100;
+           --text-secondary: #ef6c00;
+           --text-accent: #f57c00;
+           --border-color: #ffb74d;
+           --shadow: 0 1px 2px 0 rgba(255, 152, 0, 0.3), 0 1px 3px 1px rgba(255, 152, 0, 0.15);
+           --shadow-lg: 0 1px 2px 0 rgba(255, 152, 0, 0.3), 0 2px 6px 2px rgba(255, 152, 0, 0.15);
+       }
+
+       .theme-lavender {
+           --bg-main: #f3e5f5;
+           --bg-surface: #ffffff;
+           --bg-surface-hover: #e1bee7;
+           --bg-accent: #ce93d8;
+           --text-primary: #4a148c;
+           --text-secondary: #6a1b9a;
+           --text-accent: #7b1fa2;
+           --border-color: #ba68c8;
+           --shadow: 0 1px 2px 0 rgba(156, 39, 176, 0.3), 0 1px 3px 1px rgba(156, 39, 176, 0.15);
+           --shadow-lg: 0 1px 2px 0 rgba(156, 39, 176, 0.3), 0 2px 6px 2px rgba(156, 39, 176, 0.15);
+       }
+
+       .theme-monochrome {
+           --bg-main: #fafafa;
+           --bg-surface: #ffffff;
+           --bg-surface-hover: #eeeeee;
+           --bg-accent: #e0e0e0;
+           --text-primary: #212121;
+           --text-secondary: #616161;
+           --text-accent: #424242;
+           --border-color: #9e9e9e;
+           --shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 3px 1px rgba(0, 0, 0, 0.1);
+           --shadow-lg: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 6px 2px rgba(0, 0, 0, 0.1);
+       }
+
+       .theme-contrast {
+           --bg-main: #000000;
+           --bg-surface: #0a0a0a;
+           --bg-surface-hover: #1a1a1a;
+           --bg-accent: #ffff00;
+           --text-primary: #ffffff;
+           --text-secondary: #e0e0e0;
+           --text-accent: #ffff00;
+           --border-color: #ffffff;
+           --shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.3), 0 1px 3px 1px rgba(255, 255, 255, 0.15);
+           --shadow-lg: 0 1px 2px 0 rgba(255, 255, 255, 0.3), 0 2px 6px 2px rgba(255, 255, 255, 0.15);
+       }
+
+       /* ==========================================================================
+          2. RESET & BASE STYLES
+          ========================================================================== */
+       * {
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+       }
+
+       body {
+           font-family: var(--font-sans);
+           background-color: var(--bg-main);
+           color: var(--text-primary);
+           line-height: 1.6;
+           transition: var(--transition);
+           -webkit-font-smoothing: antialiased;
+           -moz-osx-font-smoothing: grayscale;
+       }
+
+       /* ==========================================================================
+          3. LAYOUT COMPONENTS
+          ========================================================================== */
+       .container {
+           max-width: 1200px;
+           margin: 0 auto;
+           padding: 20px;
+       }
+
+       .header {
+           background: var(--bg-surface);
+           border-radius: var(--border-radius);
+           padding: 24px;
+           margin-bottom: 24px;
+           box-shadow: var(--shadow);
+           transition: var(--transition);
+       }
+
+       .header h1 {
+           font-size: 2rem;
+           font-weight: 600;
+           color: var(--text-primary);
+           margin-bottom: 8px;
+       }
+
+       .header p {
+           color: var(--text-secondary);
+           font-size: 0.95rem;
+       }
+
+       .grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+           gap: 24px;
+           margin-bottom: 24px;
+       }
+
+       .card {
+           background: var(--bg-surface);
+           border-radius: var(--border-radius);
+           padding: 24px;
+           box-shadow: var(--shadow);
+           transition: var(--transition);
+           border: 1px solid var(--border-color);
+       }
+
+       .card:hover {
+           box-shadow: var(--shadow-lg);
+           transform: translateY(-2px);
+       }
+
+       .card-title {
+           font-size: 1.1rem;
+           font-weight: 600;
+           margin-bottom: 16px;
+           color: var(--text-primary);
+           display: flex;
+           align-items: center;
+           gap: 8px;
+       }
+
+       /* ==========================================================================
+          4. FORM CONTROLS
+          ========================================================================== */
+       .form-group {
+           margin-bottom: 20px;
+       }
+
+       .form-label {
+           display: block;
+           font-size: 0.875rem;
+           font-weight: 500;
+           color: var(--text-secondary);
+           margin-bottom: 8px;
+       }
+
+       .form-control {
+           width: 100%;
+           padding: 12px 16px;
+           border: 1px solid var(--border-color);
+           border-radius: var(--border-radius);
+           background: var(--bg-surface);
+           color: var(--text-primary);
+           font-family: var(--font-sans);
+           font-size: 0.95rem;
+           transition: var(--transition);
+       }
+
+       .form-control:focus {
+           outline: none;
+           border-color: var(--text-accent);
+           box-shadow: 0 0 0 2px var(--bg-accent);
+       }
+
+       .form-textarea {
+           resize: vertical;
+           min-height: 120px;
+           font-family: var(--font-mono);
+           line-height: 1.5;
+       }
+
+       .form-range {
+           width: 100%;
+           height: 6px;
+           border-radius: 3px;
+           background: var(--bg-accent);
+           outline: none;
+           -webkit-appearance: none;
+       }
+
+       .form-range::-webkit-slider-thumb {
+           -webkit-appearance: none;
+           width: 18px;
+           height: 18px;
+           border-radius: 50%;
+           background: var(--text-accent);
+           cursor: pointer;
+           transition: var(--transition);
+       }
+
+       .form-range::-webkit-slider-thumb:hover {
+           transform: scale(1.2);
+       }
+
+       .form-range::-moz-range-thumb {
+           width: 18px;
+           height: 18px;
+           border-radius: 50%;
+           background: var(--text-accent);
+           cursor: pointer;
+           border: none;
+       }
+
+       .range-value {
+           font-size: 0.875rem;
+           color: var(--text-accent);
+           font-weight: 600;
+           margin-left: 8px;
+       }
+
+       /* ==========================================================================
+          5. BUTTONS
+          ========================================================================== */
+       .btn {
+           display: inline-flex;
+           align-items: center;
+           justify-content: center;
+           padding: 10px 20px;
+           border-radius: var(--border-radius);
+           border: none;
+           font-family: var(--font-sans);
+           font-size: 0.875rem;
+           font-weight: 500;
+           cursor: pointer;
+           transition: var(--transition);
+           text-decoration: none;
+           gap: 8px;
+       }
+
+       .btn-primary {
+           background: var(--text-accent);
+           color: white;
+       }
+
+       .btn-primary:hover {
+           opacity: 0.9;
+           transform: translateY(-1px);
+       }
+
+       .btn-secondary {
+           background: var(--bg-accent);
+           color: var(--text-primary);
+       }
+
+       .btn-secondary:hover {
+           background: var(--bg-surface-hover);
+       }
+
+       .btn-danger {
+           background: #ea4335;
+           color: white;
+       }
+
+       .btn-danger:hover {
+           background: #d33426;
+       }
+
+       .btn-group {
+           display: flex;
+           gap: 12px;
+           flex-wrap: wrap;
+       }
+
+       /* ==========================================================================
+          6. STATS DISPLAY
+          ========================================================================== */
+       .stats-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+           gap: 16px;
+       }
+
+       .stat-item {
+           text-align: center;
+           padding: 16px;
+           background: var(--bg-accent);
+           border-radius: var(--border-radius);
+           transition: var(--transition);
+       }
+
+       .stat-value {
+           font-size: 1.5rem;
+           font-weight: 700;
+           color: var(--text-accent);
+           display: block;
+       }
+
+       .stat-label {
+           font-size: 0.75rem;
+           color: var(--text-secondary);
+           text-transform: uppercase;
+           letter-spacing: 0.5px;
+       }
+
+       /* ==========================================================================
+          7. SENTENCE HIGHLIGHTING
+          ========================================================================== */
+       .sentence-normal {
+           background: transparent;
+       }
+
+       .sentence-medium {
+           background: rgba(255, 193, 7, 0.15);
+           border-left: 3px solid #ffc107;
+           padding-left: 4px;
+       }
+
+       .sentence-long {
+           background: rgba(244, 67, 54, 0.15);
+           border-left: 3px solid #f44336;
+           padding-left: 4px;
+       }
+
+       .sentence-info {
+           font-size: 0.75rem;
+           color: var(--text-secondary);
+           margin-left: 8px;
+           font-weight: 500;
+       }
+
+       /* ==========================================================================
+          8. METRONOME
+          ========================================================================== */
+       .metronome-display {
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           gap: 20px;
+           padding: 20px;
+           background: var(--bg-accent);
+           border-radius: var(--border-radius);
+           margin-top: 16px;
+       }
+
+       .metronome-beat {
+           width: 60px;
+           height: 60px;
+           border-radius: 50%;
+           background: var(--bg-surface);
+           border: 2px solid var(--border-color);
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-weight: 700;
+           transition: var(--transition);
+       }
+
+       .metronome-beat.active {
+           background: var(--text-accent);
+           color: white;
+           transform: scale(1.1);
+       }
+
+       .metronome-controls {
+           display: flex;
+           gap: 12px;
+           align-items: center;
+       }
+
+       /* ==========================================================================
+          9. PRACTICE MODE
+          ========================================================================== */
+       .practice-overlay {
+           position: fixed;
+           top: 0;
+           left: 0;
+           right: 0;
+           bottom: 0;
+           background: var(--bg-main);
+           z-index: 1000;
+           display: none;
+           flex-direction: column;
+       }
+
+       .practice-overlay.active {
+           display: flex;
+       }
+
+       .practice-header {
+           background: var(--bg-surface);
+           padding: 16px 24px;
+           box-shadow: var(--shadow);
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+       }
+
+       .practice-content {
+           flex: 1;
+           overflow-y: auto;
+           padding: 40px 20px;
+           max-width: 800px;
+           margin: 0 auto;
+           width: 100%;
+       }
+
+       .practice-text {
+           font-size: 1.5rem;
+           line-height: 2;
+           color: var(--text-primary);
+       }
+
+       .practice-controls {
+           position: fixed;
+           bottom: 20px;
+           left: 50%;
+           transform: translateX(-50%);
+           background: var(--bg-surface);
+           padding: 12px 24px;
+           border-radius: 50px;
+           box-shadow: var(--shadow-lg);
+           display: flex;
+           gap: 16px;
+           align-items: center;
+       }
+
+       /* ==========================================================================
+          10. SETTINGS PANEL
+          ========================================================================== */
+       .settings-panel {
+           position: fixed;
+           top: 0;
+           right: -400px;
+           width: 400px;
+           height: 100vh;
+           background: var(--bg-surface);
+           box-shadow: var(--shadow-lg);
+           z-index: 999;
+           transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+           overflow-y: auto;
+       }
+
+       .settings-panel.active {
+           right: 0;
+       }
+
+       .settings-header {
+           padding: 24px;
+           border-bottom: 1px solid var(--border-color);
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+       }
+
+       .settings-content {
+           padding: 24px;
+       }
+
+       .settings-section {
+           margin-bottom: 32px;
+       }
+
+       .settings-section h3 {
+           font-size: 1rem;
+           font-weight: 600;
+           margin-bottom: 16px;
+           color: var(--text-primary);
+       }
+
+       .theme-grid {
+           display: grid;
+           grid-template-columns: repeat(3, 1fr);
+           gap: 12px;
+       }
+
+       .theme-option {
+           padding: 12px;
+           border: 2px solid var(--border-color);
+           border-radius: var(--border-radius);
+           cursor: pointer;
+           transition: var(--transition);
+           text-align: center;
+           font-size: 0.75rem;
+           font-weight: 500;
+       }
+
+       .theme-option:hover {
+           border-color: var(--text-accent);
+       }
+
+       .theme-option.active {
+           border-color: var(--text-accent);
+           background: var(--bg-accent);
+       }
+
+       .overlay {
+           position: fixed;
+           top: 0;
+           left: 0;
+           right: 0;
+           bottom: 0;
+           background: rgba(0, 0, 0, 0.5);
+           z-index: 998;
+           opacity: 0;
+           visibility: hidden;
+           transition: var(--transition);
+       }
+
+       .overlay.active {
+           opacity: 1;
+           visibility: visible;
+       }
+
+       /* ==========================================================================
+          11. USER GUIDE & CREDITS
+          ========================================================================== */
+       .guide-section {
+           margin-top: 40px;
+           padding: 24px;
+           background: var(--bg-surface);
+           border-radius: var(--border-radius);
+           box-shadow: var(--shadow);
+       }
+
+       .guide-section h2 {
+           font-size: 1.25rem;
+           margin-bottom: 16px;
+           color: var(--text-primary);
+       }
+
+       .guide-section h3 {
+           font-size: 1rem;
+           margin: 16px 0 8px;
+           color: var(--text-accent);
+       }
+
+       .guide-section p, .guide-section li {
+           font-size: 0.875rem;
+           color: var(--text-secondary);
+           margin-bottom: 8px;
+       }
+
+       .guide-section ul {
+           padding-left: 20px;
+       }
+
+       .credits {
+           text-align: center;
+           padding: 24px;
+           border-top: 1px solid var(--border-color);
+           margin-top: 40px;
+       }
+
+       .credits p {
+           font-size: 0.875rem;
+           color: var(--text-secondary);
+       }
+
+       .credits a {
+           color: var(--text-accent);
+           text-decoration: none;
+           font-weight: 600;
+       }
+
+       .credits a:hover {
+           text-decoration: underline;
+       }
+
+       /* ==========================================================================
+          12. RESPONSIVE DESIGN
+          ========================================================================== */
+       @media (max-width: 768px) {
+           .container {
+               padding: 12px;
+           }
+
+           .header h1 {
+               font-size: 1.5rem;
+           }
+
+           .grid {
+               grid-template-columns: 1fr;
+               gap: 16px;
+           }
+
+           .settings-panel {
+               width: 100%;
+               right: -100%;
+           }
+
+           .theme-grid {
+               grid-template-columns: repeat(2, 1fr);
+           }
+
+           .stats-grid {
+               grid-template-columns: repeat(2, 1fr);
+           }
+
+           .btn-group {
+               flex-direction: column;
+           }
+
+           .practice-text {
+               font-size: 1.2rem;
+           }
+
+           .metronome-controls {
+               flex-wrap: wrap;
+               justify-content: center;
+           }
+       }
+
+       @media (max-width: 480px) {
+           .header {
+               padding: 16px;
+           }
+
+           .card {
+               padding: 16px;
+           }
+
+           .stat-value {
+               font-size: 1.25rem;
+           }
+
+           .practice-content {
+               padding: 20px 12px;
+           }
+       }
+
+       /* ==========================================================================
+          13. UTILITIES
+          ========================================================================== */
+       .mb-4 { margin-bottom: 24px; }
+       .mt-4 { margin-top: 24px; }
+       .text-center { text-align: center; }
+       .hidden { display: none !important; }
+       .fade-in {
+           animation: fadeIn 0.3s ease-in;
+       }
+
+       @keyframes fadeIn {
+           from { opacity: 0; transform: translateY(10px); }
+           to { opacity: 1; transform: translateY(0); }
+       }
+
+       .pulse {
+           animation: pulse 2s infinite;
+       }
+
+       @keyframes pulse {
+           0% { opacity: 1; }
+           50% { opacity: 0.5; }
+           100% { opacity: 1; }
+       }
+
+       /* ==========================================================================
+          14. ACCESSIBILITY
+          ========================================================================== */
+       @media (prefers-reduced-motion: reduce) {
+           * {
+               animation-duration: 0.01ms !important;
+               animation-iteration-count: 1 !important;
+               transition-duration: 0.01ms !important;
+           }
+       }
+
+       .sr-only {
+           position: absolute;
+           width: 1px;
+           height: 1px;
+           padding: 0;
+           margin: -1px;
+           overflow: hidden;
+           clip: rect(0, 0, 0, 0);
+           white-space: nowrap;
+           border-width: 0;
+       }
+
+       /* ==========================================================================
+          15. PRINT STYLES
+          ========================================================================== */
+       @media print {
+           body {
+               background: white;
+           }
+
+           .no-print {
+               display: none !important;
+           }
+
+           .card {
+               box-shadow: none;
+               border: 1px solid #ddd;
+           }
+       }
+   </style>
+</head>
+<body>
+   <!-- Main Application Container -->
+   <div class="container">
+       <!-- Header -->
+       <header class="header fade-in">
+           <h1>📊 Speech Rate Calculator Pro</h1>
+           <p>Professional tool for speakers, educators, and presenters to analyze and practice speeches</p>
+       </header>
+
+       <!-- Statistics Cards -->
+       <div class="grid fade-in">
+           <div class="card">
+               <div class="card-title">⏱️ Speech Time</div>
+               <div class="stats-grid">
+                   <div class="stat-item">
+                       <span class="stat-value" id="totalTime">0:00</span>
+                       <span class="stat-label">Total</span>
+                   </div>
+                   <div class="stat-item">
+                       <span class="stat-value" id="wordCount">0</span>
+                       <span class="stat-label">Words</span>
+                   </div>
+                   <div class="stat-item">
+                       <span class="stat-value" id="sentenceCount">0</span>
+                       <span class="stat-label">Sentences</span>
+                   </div>
+               </div>
+           </div>
+
+           <div class="card">
+               <div class="card-title">📈 Analysis</div>
+               <div class="stats-grid">
+                   <div class="stat-item">
+                       <span class="stat-value" id="avgSentenceLength">0</span>
+                       <span class="stat-label">Avg Words/Sentence</span>
+                   </div>
+                   <div class="stat-item">
+                       <span class="stat-value" id="longestSentence">0</span>
+                       <span class="stat-label">Longest Sentence</span>
+                   </div>
+                   <div class="stat-item">
+                       <span class="stat-value" id="readabilityScore">0</span>
+                       <span class="stat-label">Readability</span>
+                   </div>
+               </div>
+           </div>
+
+           <div class="card">
+               <div class="card-title">🎯 Practice Stats</div>
+               <div class="stats-grid">
+                   <div class="stat-item">
+                       <span class="stat-value" id="practiceTime">0:00</span>
+                       <span class="stat-label">Practice Time</span>
+                   </div>
+                   <div class="stat-item">
+                       <span class="stat-value" id="sessionsCount">0</span>
+                       <span class="stat-label">Sessions</span>
+                   </div>
+                   <div class="stat-item">
+                       <span class="stat-value" id="accuracyScore">0%</span>
+                       <span class="stat-label">Accuracy</span>
+                   </div>
+               </div>
+           </div>
+       </div>
+
+       <!-- Main Content Area -->
+       <div class="grid fade-in">
+           <!-- Text Input Card -->
+           <div class="card" style="grid-column: span 2;">
+               <div class="card-title">📝 Speech Input</div>
+               
+               <div class="form-group">
+                   <label class="form-label" for="speechTitle">Speech Title</label>
+                   <input type="text" class="form-control" id="speechTitle" placeholder="Enter speech title...">
+               </div>
+
+               <div class="form-group">
+                   <label class="form-label" for="speechText">Speech Text</label>
+                   <textarea 
+                       class="form-control form-textarea" 
+                       id="speechText" 
+                       placeholder="Paste or type your speech here...&#10;&#10;The quick brown fox jumps over the lazy dog. This is a medium length sentence that should be highlighted in yellow. This is an excessively long and verbose sentence that contains far too many words and should be highlighted in red to indicate that it needs to be broken down into smaller more digestible pieces for better audience comprehension and delivery."
+                       rows="10"
+                   ></textarea>
+                   <div class="text-right mt-4">
+                       <small class="sentence-info" id="charCount">0 characters</small>
+                   </div>
+               </div>
+
+               <div class="btn-group">
+                   <button class="btn btn-primary" id="analyzeBtn">
+                       <span>🔍</span> Analyze Speech
+                   </button>
+                   <button class="btn btn-secondary" id="clearBtn">
+                       <span>🗑️</span> Clear
+                   </button>
+                   <button class="btn btn-secondary" id="saveBtn">
+                       <span>💾</span> Save Speech
+                   </button>
+                   <button class="btn btn-secondary" id="loadBtn">
+                       <span>📂</span> Load Speech
+                   </button>
+               </div>
+           </div>
+
+           <!-- WPM Control Card -->
+           <div class="card">
+               <div class="card-title">⚡ Speech Rate (WPM)</div>
+               
+               <div class="form-group">
+                   <label class="form-label" for="wpmSlider">
+                       Words Per Minute
+                       <span class="range-value" id="wpmValue">150</span>
+                   </label>
+                   <input 
+                       type="range" 
+                       class="form-range" 
+                       id="wpmSlider"
+                       min="80"
+                       max="300"
+                       value="150"
+                       step="5"
+                   >
+               </div>
+
+               <div class="btn-group">
+                   <button class="btn btn-secondary" data-wpm="100">Slow (100)</button>
+                   <button class="btn btn-secondary" data-wpm="150">Normal (150)</button>
+                   <button class="btn btn-secondary" data-wpm="200">Fast (200)</button>
+               </div>
+
+               <div class="mt-4">
+                   <small class="sentence-info">
+                       💡 Tip: Average speaking rate is 120-150 WPM for presentations
+                   </small>
+               </div>
+           </div>
+       </div>
+
+       <!-- Analysis Results -->
+       <div class="card fade-in mt-4">
+           <div class="card-title">📊 Sentence Analysis</div>
+           <div id="sentenceAnalysis" style="min-height: 100px;">
+               <p class="text-center" style="color: var(--text-secondary); padding: 40px;">
+                   Enter speech text to see detailed sentence analysis and highlighting
+               </p>
+           </div>
+       </div>
+
+       <!-- Practice Tools -->
+       <div class="card fade-in mt-4">
+           <div class="card-title">🎯 Practice Tools</div>
+           
+           <div class="btn-group">
+               <button class="btn btn-primary" id="startPracticeBtn">
+                   <span>▶️</span> Start Practice Mode
+               </button>
+               <button class="btn btn-secondary" id="metronomeBtn">
+                   <span>🎵</span> Toggle Metronome
+               </button>
+               <button class="btn btn-secondary" id="recordBtn">
+                   <span>🎙️</span> Record Session
+               </button>
+           </div>
+
+           <!-- Metronome Display -->
+           <div id="metronomeDisplay" class="metronome-display hidden">
+               <div class="metronome-controls">
+                   <button class="btn btn-secondary" id="decreaseBpm">-5 BPM</button>
+                   <div class="metronome-beat" id="metronomeBeat">1</div>
+                   <button class="btn btn-secondary" id="increaseBpm">+5 BPM</button>
+               </div>
+               <div style="text-align: center;">
+                   <small class="sentence-info">Metronome: <span id="currentBpm">150</span> BPM</small>
+               </div>
+           </div>
+       </div>
+
+       <!-- Saved Speeches -->
+       <div class="card fade-in mt-4">
+           <div class="card-title">📚 Saved Speeches</div>
+           <div id="savedSpeechesList">
+               <p class="text-center" style="color: var(--text-secondary); padding: 20px;">
+                   No saved speeches yet
+               </p>
+           </div>
+       </div>
+
+       <!-- Settings Button -->
+       <button class="btn btn-secondary no-print" style="position: fixed; top: 20px; right: 20px; z-index: 100;" id="settingsBtn">
+           <span>⚙️</span> Settings
+       </button>
+
+       <!-- Settings Panel -->
+       <div class="overlay" id="settingsOverlay"></div>
+       <div class="settings-panel" id="settingsPanel">
+           <div class="settings-header">
+               <h2>⚙️ Settings</h2>
+               <button class="btn btn-secondary" id="closeSettingsBtn">✕</button>
+           </div>
+           <div class="settings-content">
+               <div class="settings-section">
+                   <h3>🎨 Theme</h3>
+                   <div class="theme-grid">
+                       <div class="theme-option active" data-theme="default">Light</div>
+                       <div class="theme-option" data-theme="dark">Dark</div>
+                       <div class="theme-option" data-theme="ocean">Ocean</div>
+                       <div class="theme-option" data-theme="forest">Forest</div>
+                       <div class="theme-option" data-theme="sunset">Sunset</div>
+                       <div class="theme-option" data-theme="lavender">Lavender</div>
+                       <div class="theme-option" data-theme="monochrome">Mono</div>
+                       <div class="theme-option" data-theme="contrast">Contrast</div>
+                   </div>
+               </div>
+
+               <div class="settings-section">
+                   <h3>⚡ Defaults</h3>
+                   <div class="form-group">
+                       <label class="form-label" for="defaultWpm">
+                           Default WPM
+                           <span class="range-value" id="defaultWpmValue">150</span>
+                       </label>
+                       <input 
+                           type="range" 
+                           class="form-range" 
+                           id="defaultWpm"
+                           min="80"
+                           max="300"
+                           value="150"
+                           step="5"
+                       >
+                   </div>
+                   <div class="form-group">
+                       <label class="form-label" for="highlightThreshold">
+                           Long Sentence Threshold
+                           <span class="range-value" id="thresholdValue">25</span>
+                       </label>
+                       <input 
+                           type="range" 
+                           class="form-range" 
+                           id="highlightThreshold"
+                           min="15"
+                           max="40"
+                           value="25"
+                           step="1"
+                       >
+                   </div>
+               </div>
+
+               <div class="settings-section">
+                   <h3>📤 Data Management</h3>
+                   <div class="btn-group">
+                       <button class="btn btn-secondary" id="exportDataBtn">
+                           <span>📥</span> Export Data
+                       </button>
+                       <button class="btn btn-secondary" id="importDataBtn">
+                           <span>📤</span> Import Data
+                       </button>
+                       <input type="file" id="importFile" accept=".json" style="display: none;">
+                   </div>
+                   <div class="btn-group">
+                       <button class="btn btn-danger" id="clearAllDataBtn">
+                           <span>⚠️</span> Clear All Data
+                       </button>
+                   </div>
+               </div>
+
+               <div class="settings-section">
+                   <h3>ℹ️ About</h3>
+                   <p style="font-size: 0.75rem; color: var(--text-secondary);">
+                       Speech Rate Calculator Pro v1.0<br>
+                       A professional tool for speech analysis and practice<br>
+                       All data stored locally in your browser
+                   </p>
+               </div>
+           </div>
+       </div>
+
+       <!-- Practice Mode Overlay -->
+       <div class="practice-overlay" id="practiceOverlay">
+           <div class="practice-header">
+               <div>
+                   <h2 id="practiceTitle" style="font-size: 1.25rem;">Practice Mode</h2>
+                   <small id="practiceStats" style="color: var(--text-secondary);">Time: 0:00 | Words: 0</small>
+               </div>
+               <div>
+                   <button class="btn btn-secondary" id="pausePracticeBtn">⏸️</button>
+                   <button class="btn btn-primary" id="stopPracticeBtn">⏹️ Stop</button>
+               </div>
+           </div>
+           <div class="practice-content">
+               <div class="practice-text" id="practiceText"></div>
+           </div>
+           <div class="practice-controls">
+               <button class="btn btn-secondary" id="prevParagraphBtn">⬅️ Prev</button>
+               <button class="btn btn-secondary" id="resetPracticeBtn">🔄 Reset</button>
+               <button class="btn btn-secondary" id="nextParagraphBtn">Next ➡️</button>
+           </div>
+       </div>
+
+       <!-- User Guide Section -->
+       <div class="guide-section fade-in">
+           <h2>📖 User Guide</h2>
+           
+           <h3>What is Speech Rate Calculator Pro?</h3>
+           <p>
+               Speech Rate Calculator Pro is a comprehensive tool designed to help speakers, educators, and presenters 
+               analyze their speeches for timing, readability, and delivery. It calculates speaking time based on your 
+               words-per-minute (WPM) rate, highlights long sentences, and provides practice tools with a metronome.
+           </p>
+
+           <h3>Key Features</h3>
+           <ul>
+               <li><strong>Real-time Analysis:</strong> See instant updates as you type or paste your speech</li>
+               <li><strong>Sentence Highlighting:</strong> Visual feedback on sentence length (Short, Medium, Long)</li>
+               <li><strong>Adjustable WPM:</strong> Customize speaking rate from 80 to 300 words per minute</li>
+               <li><strong>Practice Mode:</strong> Full-screen teleprompter with auto-scroll and metronome</li>
+               <li><strong>Speech Management:</strong> Save, load, and organize multiple speeches</li>
+               <li><strong>Advanced Statistics:</strong> Readability scores, average sentence length, and practice accuracy</li>
+               <li><strong>7 Premium Themes:</strong> Customize the interface to your preference</li>
+               <li><strong>Data Portability:</strong> Export/import all your data as JSON</li>
+           </ul>
+
+           <h3>How to Use</h3>
+           <ul>
+               <li><strong>Step 1:</strong> Enter or paste your speech text in the input area</li>
+               <li><strong>Step 2:</strong> Adjust the WPM slider to your speaking speed</li>
+               <li><strong>Step 3:</strong> Review the highlighted sentences and statistics</li>
+               <li><strong>Step 4:</strong> Click "Start Practice Mode" to practice with the teleprompter</li>
+               <li><strong>Step 5:</strong> Use the metronome to maintain consistent pacing</li>
+               <li><strong>Step 6:</strong> Save your speech for future reference and practice</li>
+           </ul>
+
+           <h3>Customization Tips</h3>
+           <ul>
+               <li>Click the ⚙️ Settings button to change themes and default values</li>
+               <li>Set your default WPM and long sentence threshold in Settings</li>
+               <li>Export your data regularly to keep backups</li>
+               <li>Use keyboard shortcuts: Ctrl+S to save, Ctrl+P for practice mode</li>
+           </ul>
+
+           <h3>Understanding the Metrics</h3>
+           <ul>
+               <li><strong>Total Time:</strong> Estimated time to deliver the entire speech</li>
+               <li><strong>Word Count:</strong> Total number of words in your speech</li>
+               <li><strong>Sentence Length:</strong> Average words per sentence</li>
+               <li><strong>Readability:</strong> Score based on sentence complexity</li>
+               <li><strong>Practice Accuracy:</strong> How closely you match target WPM during practice</li>
+           </ul>
+       </div>
+
+       <!-- Credits Section -->
+       <div class="credits">
+           <p>Made with ❤️ by <a href="https://github.com/Aliriyaj007" target="_blank" rel="noopener noreferrer">Aliriyaj007</a></p>
+       </div>
+   </div>
+
+   <!-- JavaScript Application -->
+   <script>
+       // ==========================================================================
+       // APPLICATION ARCHITECTURE - Modular JavaScript Design
+       // ==========================================================================
+       
+       // Core Application Module (IIFE Pattern)
+       const SpeechRateCalculator = (function() {
+           'use strict';
+
+           // ==========================================================================
+           // PRIVATE STATE & CONFIGURATION
+           // ==========================================================================
+           const state = {
+               currentSpeech: {
+                   title: '',
+                   text: '',
+                   wordCount: 0,
+                   sentenceCount: 0,
+                   totalTime: 0,
+                   sentences: [],
+                   stats: {}
+               },
+               settings: {
+                   wpm: 150,
+                   defaultWpm: 150,
+                   highlightThreshold: 25,
+                   theme: 'default',
+                   advancedMode: true
+               },
+               practice: {
+                   isActive: false,
+                   startTime: null,
+                   currentParagraph: 0,
+                   sessionTime: 0,
+                   sessionsCount: 0,
+                   accuracy: 0,
+                   isPaused: false
+               },
+               metronome: {
+                   isActive: false,
+                   interval: null,
+                   beat: 0,
+                   bpm: 150
+               },
+               savedSpeeches: [],
+               lastSavedData: null
+           };
+
+           const STORAGE_KEYS = {
+               speeches: 'src_saved_speeches',
+               settings: 'src_settings',
+               stats: 'src_practice_stats'
+           };
+
+           // ==========================================================================
+           // UTILITY FUNCTIONS
+           // ==========================================================================
+           const utils = {
+               formatTime(minutes) {
+                   const mins = Math.floor(minutes);
+                   const secs = Math.floor((minutes - mins) * 60);
+                   return `${mins}:${secs.toString().padStart(2, '0')}`;
+               },
+
+               sanitizeHTML(text) {
+                   const div = document.createElement('div');
+                   div.textContent = text;
+                   return div.innerHTML;
+               },
+
+               debounce(func, wait) {
+                   let timeout;
+                   return function executedFunction(...args) {
+                       const later = () => {
+                           clearTimeout(timeout);
+                           func(...args);
+                       };
+                       clearTimeout(timeout);
+                       timeout = setTimeout(later, wait);
+                   };
+               },
+
+               generateId() {
+                   return Date.now().toString(36) + Math.random().toString(36).substr(2);
+               },
+
+               downloadFile(filename, content, type = 'application/json') {
+                   const blob = new Blob([content], { type });
+                   const url = URL.createObjectURL(blob);
+                   const a = document.createElement('a');
+                   a.href = url;
+                   a.download = filename;
+                   a.click();
+                   URL.revokeObjectURL(url);
+               },
+
+               calculateReadability(text) {
+                   const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
+                   const words = text.split(/\s+/).filter(w => w.length > 0).length;
+                   const avgWordsPerSentence = sentences > 0 ? words / sentences : 0;
+                   
+                   // Simplified readability score (higher is better)
+                   const score = Math.max(0, 100 - (avgWordsPerSentence - 15) * 3);
+                   return Math.round(score);
+               }
+           };
+
+           // ==========================================================================
+           // STORAGE MODULE
+           // ==========================================================================
+           const storage = {
+               save() {
+                   try {
+                       // Only save if data has changed
+                       const currentData = JSON.stringify({
+                           speeches: state.savedSpeeches,
+                           settings: state.settings,
+                           practice: {
+                               sessionsCount: state.practice.sessionsCount,
+                               accuracy: state.practice.accuracy
+                           }
+                       });
+
+                       if (currentData !== state.lastSavedData) {
+                           localStorage.setItem(STORAGE_KEYS.speeches, JSON.stringify(state.savedSpeeches));
+                           localStorage.setItem(STORAGE_KEYS.settings, JSON.stringify(state.settings));
+                           localStorage.setItem(STORAGE_KEYS.stats, JSON.stringify({
+                               sessionsCount: state.practice.sessionsCount,
+                               accuracy: state.practice.accuracy
+                           }));
+                           state.lastSavedData = currentData;
+                       }
+                   } catch (error) {
+                       console.warn('Storage save failed:', error);
+                       ui.showNotification('⚠️ Failed to save data', 'error');
+                   }
+               },
+
+               load() {
+                   try {
+                       // Load settings
+                       const savedSettings = localStorage.getItem(STORAGE_KEYS.settings);
+                       if (savedSettings) {
+                           state.settings = { ...state.settings, ...JSON.parse(savedSettings) };
+                       }
+
+                       // Load speeches
+                       const savedSpeeches = localStorage.getItem(STORAGE_KEYS.speeches);
+                       if (savedSpeeches) {
+                           state.savedSpeeches = JSON.parse(savedSpeeches);
+                       }
+
+                       // Load practice stats
+                       const savedStats = localStorage.getItem(STORAGE_KEYS.stats);
+                       if (savedStats) {
+                           const stats = JSON.parse(savedStats);
+                           state.practice.sessionsCount = stats.sessionsCount || 0;
+                           state.practice.accuracy = stats.accuracy || 0;
+                       }
+
+                       // Create backup if data exists
+                       if (state.savedSpeeches.length > 0) {
+                           this.createBackup();
+                       }
+                   } catch (error) {
+                       console.warn('Storage load failed:', error);
+                       ui.showNotification('⚠️ Failed to load saved data', 'error');
+                   }
+               },
+
+               createBackup() {
+                   const backup = {
+                       speeches: state.savedSpeeches,
+                       settings: state.settings,
+                       timestamp: new Date().toISOString(),
+                       version: '1.0'
+                   };
+                   const backupKey = `src_backup_${Date.now()}`;
+                   try {
+                       localStorage.setItem(backupKey, JSON.stringify(backup));
+                       // Keep only last 5 backups
+                       const backups = Object.keys(localStorage)
+                           .filter(key => key.startsWith('src_backup_'))
+                           .sort()
+                           .reverse();
+                       backups.slice(5).forEach(key => localStorage.removeItem(key));
+                   } catch (e) {
+                       console.warn('Backup creation failed:', e);
+                   }
+               },
+
+               export() {
+                   const exportData = {
+                       version: '1.0',
+                       exportDate: new Date().toISOString(),
+                       speeches: state.savedSpeeches,
+                       settings: state.settings,
+                       stats: {
+                           sessionsCount: state.practice.sessionsCount,
+                           accuracy: state.practice.accuracy
+                       }
+                   };
+                   return JSON.stringify(exportData, null, 2);
+               },
+
+               validateImport(data) {
+                   try {
+                       const parsed = typeof data === 'string' ? JSON.parse(data) : data;
+                       
+                       // Check required structure
+                       if (!parsed.version || !parsed.exportDate) {
+                           throw new Error('Invalid export format');
+                       }
+
+                       // Validate speeches array
+                       if (!Array.isArray(parsed.speeches)) {
+                           throw new Error('Invalid speeches data');
+                       }
+
+                       // Validate settings
+                       if (parsed.settings && typeof parsed.settings !== 'object') {
+                           throw new Error('Invalid settings data');
+                       }
+
+                       // Check for required fields in speeches
+                       parsed.speeches.forEach((speech, index) => {
+                           if (!speech.id || !speech.title || speech.text === undefined) {
+                               throw new Error(`Invalid speech data at index ${index}`);
+                           }
+                       });
+
+                       return { valid: true, data: parsed };
+                   } catch (error) {
+                       return { valid: false, error: error.message };
+                   }
+               },
+
+               import(data) {
+                   const validation = this.validateImport(data);
+                   if (!validation.valid) {
+                       throw new Error(validation.error);
+                   }
+
+                   const parsed = validation.data;
+                   
+                   // Merge settings
+                   if (parsed.settings) {
+                       state.settings = { ...state.settings, ...parsed.settings };
+                   }
+
+                   // Import speeches (avoid duplicates by ID)
+                   const existingIds = new Set(state.savedSpeeches.map(s => s.id));
+                   const newSpeeches = parsed.speeches.filter(s => !existingIds.has(s.id));
+                   
+                   state.savedSpeeches = [...state.savedSpeeches, ...newSpeeches];
+
+                   // Import stats
+                   if (parsed.stats) {
+                       state.practice.sessionsCount = parsed.stats.sessionsCount || state.practice.sessionsCount;
+                       state.practice.accuracy = parsed.stats.accuracy || state.practice.accuracy;
+                   }
+
+                   this.save();
+                   return { imported: newSpeeches.length, duplicates: parsed.speeches.length - newSpeeches.length };
+               }
+           };
+
+           // ==========================================================================
+           // SPEECH ANALYSIS MODULE
+           // ==========================================================================
+           const analyzer = {
+               parseSentences(text) {
+                   // Split into sentences, handling common abbreviations
+                   const sentences = text
+                       .split(/(?<!\b(?:Mr|Mrs|Ms|Dr|Prof|Sr|Jr|vs|etc|e\.g|i\.e)\.)\s*([.!?]+)\s+/g)
+                       .reduce((acc, part, i, arr) => {
+                           if (i % 2 === 0) {
+                               const punctuation = arr[i + 1] || '';
+                               const sentence = (part + punctuation).trim();
+                               if (sentence.length > 0) {
+                                   acc.push(sentence);
+                               }
+                           }
+                           return acc;
+                       }, []);
+
+                   return sentences;
+               },
+
+               analyzeSentence(sentence, index, wpm) {
+                   const words = sentence.split(/\s+/).filter(w => w.length > 0);
+                   const wordCount = words.length;
+                   const time = wordCount / wpm;
+                   
+                   let category = 'normal';
+                   if (wordCount > state.settings.highlightThreshold) {
+                       category = 'long';
+                   } else if (wordCount > state.settings.highlightThreshold - 10) {
+                       category = 'medium';
+                   }
+
+                   return {
+                       text: sentence,
+                       index,
+                       wordCount,
+                       time,
+                       category,
+                       timeFormatted: utils.formatTime(time)
+                   };
+               },
+
+               analyze(text, wpm) {
+                   const sentences = this.parseSentences(text);
+                   const analyzedSentences = sentences.map((s, i) => this.analyzeSentence(s, i, wpm));
+                   
+                   const totalWords = analyzedSentences.reduce((sum, s) => sum + s.wordCount, 0);
+                   const totalTime = totalWords / wpm;
+                   const avgWordsPerSentence = sentences.length > 0 ? totalWords / sentences.length : 0;
+                   const longestSentence = Math.max(...analyzedSentences.map(s => s.wordCount), 0);
+                   const readability = utils.calculateReadability(text);
+
+                   state.currentSpeech = {
+                       ...state.currentSpeech,
+                       text,
+                       wordCount: totalWords,
+                       sentenceCount: sentences.length,
+                       totalTime,
+                       sentences: analyzedSentences,
+                       stats: {
+                           avgWordsPerSentence,
+                           longestSentence,
+                           readability
+                       }
+                   };
+
+                   return state.currentSpeech;
+               }
+           };
+
+           // ==========================================================================
+           // UI MODULE
+           // ==========================================================================
+           const ui = {
+               elements: {},
+
+               initialize() {
+                   // Cache DOM elements
+                   this.elements = {
+                       // Text inputs
+                       speechTitle: document.getElementById('speechTitle'),
+                       speechText: document.getElementById('speechText'),
+                       charCount: document.getElementById('charCount'),
+                       
+                       // WPM controls
+                       wpmSlider: document.getElementById('wpmSlider'),
+                       wpmValue: document.getElementById('wpmValue'),
+                       wpmButtons: document.querySelectorAll('[data-wpm]'),
+                       
+                       // Stats
+                       totalTime: document.getElementById('totalTime'),
+                       wordCount: document.getElementById('wordCount'),
+                       sentenceCount: document.getElementById('sentenceCount'),
+                       avgSentenceLength: document.getElementById('avgSentenceLength'),
+                       longestSentence: document.getElementById('longestSentence'),
+                       readabilityScore: document.getElementById('readabilityScore'),
+                       practiceTime: document.getElementById('practiceTime'),
+                       sessionsCount: document.getElementById('sessionsCount'),
+                       accuracyScore: document.getElementById('accuracyScore'),
+                       
+                       // Analysis results
+                       sentenceAnalysis: document.getElementById('sentenceAnalysis'),
+                       
+                       // Practice controls
+                       startPracticeBtn: document.getElementById('startPracticeBtn'),
+                       metronomeBtn: document.getElementById('metronomeBtn'),
+                       recordBtn: document.getElementById('recordBtn'),
+                       practiceOverlay: document.getElementById('practiceOverlay'),
+                       practiceText: document.getElementById('practiceText'),
+                       practiceTitle: document.getElementById('practiceTitle'),
+                       practiceStats: document.getElementById('practiceStats'),
+                       pausePracticeBtn: document.getElementById('pausePracticeBtn'),
+                       stopPracticeBtn: document.getElementById('stopPracticeBtn'),
+                       resetPracticeBtn: document.getElementById('resetPracticeBtn'),
+                       prevParagraphBtn: document.getElementById('prevParagraphBtn'),
+                       nextParagraphBtn: document.getElementById('nextParagraphBtn'),
+                       
+                       // Metronome
+                       metronomeDisplay: document.getElementById('metronomeDisplay'),
+                       metronomeBeat: document.getElementById('metronomeBeat'),
+                       currentBpm: document.getElementById('currentBpm'),
+                       increaseBpm: document.getElementById('increaseBpm'),
+                       decreaseBpm: document.getElementById('decreaseBpm'),
+                       
+                       // Buttons
+                       analyzeBtn: document.getElementById('analyzeBtn'),
+                       clearBtn: document.getElementById('clearBtn'),
+                       saveBtn: document.getElementById('saveBtn'),
+                       loadBtn: document.getElementById('loadBtn'),
+                       
+                       // Saved speeches
+                       savedSpeechesList: document.getElementById('savedSpeechesList'),
+                       
+                       // Settings
+                       settingsBtn: document.getElementById('settingsBtn'),
+                       settingsPanel: document.getElementById('settingsPanel'),
+                       settingsOverlay: document.getElementById('settingsOverlay'),
+                       closeSettingsBtn: document.getElementById('closeSettingsBtn'),
+                       
+                       // Settings controls
+                       defaultWpm: document.getElementById('defaultWpm'),
+                       defaultWpmValue: document.getElementById('defaultWpmValue'),
+                       highlightThreshold: document.getElementById('highlightThreshold'),
+                       thresholdValue: document.getElementById('thresholdValue'),
+                       themeOptions: document.querySelectorAll('.theme-option'),
+                       
+                       // Data management
+                       exportDataBtn: document.getElementById('exportDataBtn'),
+                       importDataBtn: document.getElementById('importDataBtn'),
+                       importFile: document.getElementById('importFile'),
+                       clearAllDataBtn: document.getElementById('clearAllDataBtn')
+                   };
+
+                   this.attachEventListeners();
+                   this.loadSettings();
+                   this.updateUI();
+                   this.renderSavedSpeeches();
+               },
+
+               attachEventListeners() {
+                   // Text input events
+                   this.elements.speechText.addEventListener('input', debouncedAnalyzer);
+                   this.elements.speechText.addEventListener('paste', () => setTimeout(analyzeCurrent, 100));
+                   this.elements.speechTitle.addEventListener('input', () => {
+                       state.currentSpeech.title = this.elements.speechTitle.value;
+                   });
+
+                   // WPM controls
+                   this.elements.wpmSlider.addEventListener('input', (e) => {
+                       state.settings.wpm = parseInt(e.target.value);
+                       this.updateWpmDisplay();
+                       analyzeCurrent();
+                   });
+
+                   this.elements.wpmButtons.forEach(btn => {
+                       btn.addEventListener('click', () => {
+                           const wpm = parseInt(btn.dataset.wpm);
+                           state.settings.wpm = wpm;
+                           this.elements.wpmSlider.value = wpm;
+                           this.updateWpmDisplay();
+                           analyzeCurrent();
+                       });
+                   });
+
+                   // Button events
+                   this.elements.analyzeBtn.addEventListener('click', () => analyzeCurrent());
+                   this.elements.clearBtn.addEventListener('click', () => this.clearSpeech());
+                   this.elements.saveBtn.addEventListener('click', () => this.saveCurrentSpeech());
+                   this.elements.loadBtn.addEventListener('click', () => this.showLoadDialog());
+
+                   // Practice mode
+                   this.elements.startPracticeBtn.addEventListener('click', () => practice.start());
+                   this.elements.pausePracticeBtn.addEventListener('click', () => practice.pause());
+                   this.elements.stopPracticeBtn.addEventListener('click', () => practice.stop());
+                   this.elements.resetPracticeBtn.addEventListener('click', () => practice.reset());
+                   this.elements.prevParagraphBtn.addEventListener('click', () => practice.previous());
+                   this.elements.nextParagraphBtn.addEventListener('click', () => practice.next());
+
+                   // Metronome
+                   this.elements.metronomeBtn.addEventListener('click', () => metronome.toggle());
+                   this.elements.increaseBpm.addEventListener('click', () => metronome.adjustBpm(5));
+                   this.elements.decreaseBpm.addEventListener('click', () => metronome.adjustBpm(-5));
+
+                   // Settings
+                   this.elements.settingsBtn.addEventListener('click', () => this.toggleSettings());
+                   this.elements.settingsOverlay.addEventListener('click', () => this.closeSettings());
+                   this.elements.closeSettingsBtn.addEventListener('click', () => this.closeSettings());
+
+                   // Settings controls
+                   this.elements.defaultWpm.addEventListener('input', (e) => {
+                       state.settings.defaultWpm = parseInt(e.target.value);
+                       this.elements.defaultWpmValue.textContent = e.target.value;
+                   });
+
+                   this.elements.highlightThreshold.addEventListener('input', (e) => {
+                       state.settings.highlightThreshold = parseInt(e.target.value);
+                       this.elements.thresholdValue.textContent = e.target.value;
+                       analyzeCurrent();
+                   });
+
+                   // Theme switching
+                   this.elements.themeOptions.forEach(option => {
+                       option.addEventListener('click', () => {
+                           const theme = option.dataset.theme;
+                           this.setTheme(theme);
+                       });
+                   });
+
+                   // Data management
+                   this.elements.exportDataBtn.addEventListener('click', () => this.exportData());
+                   this.elements.importDataBtn.addEventListener('click', () => this.elements.importFile.click());
+                   this.elements.importFile.addEventListener('change', (e) => this.importData(e));
+                   this.elements.clearAllDataBtn.addEventListener('click', () => this.clearAllData());
+
+                   // Keyboard shortcuts
+                   document.addEventListener('keydown', (e) => {
+                       if (e.ctrlKey || e.metaKey) {
+                           switch(e.key) {
+                               case 's':
+                                   e.preventDefault();
+                                   this.saveCurrentSpeech();
+                                   break;
+                               case 'p':
+                                   e.preventDefault();
+                                   if (state.currentSpeech.text) practice.start();
+                                   break;
+                           }
+                       }
+                       if (e.key === 'Escape') {
+                           this.closeSettings();
+                           practice.stop();
+                       }
+                   });
+
+                   // Window events
+                   window.addEventListener('beforeunload', () => storage.save());
+                   window.addEventListener('resize', () => this.handleResize());
+               },
+
+               loadSettings() {
+                   // Apply saved theme
+                   document.body.className = `theme-${state.settings.theme}`;
+                   
+                   // Update UI controls
+                   this.elements.wpmSlider.value = state.settings.wpm;
+                   this.elements.defaultWpm.value = state.settings.defaultWpm;
+                   this.elements.highlightThreshold.value = state.settings.highlightThreshold;
+                   
+                   this.updateWpmDisplay();
+                   this.updateThresholdDisplay();
+                   this.updateThemeSelection();
+               },
+
+               updateWpmDisplay() {
+                   this.elements.wpmValue.textContent = state.settings.wpm;
+                   this.elements.currentBpm.textContent = state.settings.wpm;
+                   this.elements.metronomeBeat.textContent = '1';
+               },
+
+               updateThresholdDisplay() {
+                   this.elements.thresholdValue.textContent = state.settings.highlightThreshold;
+                   this.elements.defaultWpmValue.textContent = state.settings.defaultWpm;
+               },
+
+               updateThemeSelection() {
+                   this.elements.themeOptions.forEach(option => {
+                       option.classList.toggle('active', option.dataset.theme === state.settings.theme);
+                   });
+               },
+
+               analyzeCurrent() {
+                   analyzeCurrent();
+               },
+
+               clearSpeech() {
+                   if (confirm('Are you sure you want to clear the current speech?')) {
+                       this.elements.speechTitle.value = '';
+                       this.elements.speechText.value = '';
+                       state.currentSpeech = {
+                           title: '',
+                           text: '',
+                           wordCount: 0,
+                           sentenceCount: 0,
+                           totalTime: 0,
+                           sentences: [],
+                           stats: {}
+                       };
+                       this.updateUI();
+                       this.showNotification('Speech cleared', 'info');
+                   }
+               },
+
+               saveCurrentSpeech() {
+                   if (!state.currentSpeech.text.trim()) {
+                       this.showNotification('⚠️ Cannot save empty speech', 'warning');
+                       return;
+                   }
+
+                   const speech = {
+                       id: utils.generateId(),
+                       title: state.currentSpeech.title || 'Untitled Speech',
+                       text: state.currentSpeech.text,
+                       wordCount: state.currentSpeech.wordCount,
+                       createdAt: new Date().toISOString(),
+                       updatedAt: new Date().toISOString(),
+                       stats: state.currentSpeech.stats
+                   };
+
+                   state.savedSpeeches.unshift(speech);
+                   storage.save();
+                   this.renderSavedSpeeches();
+                   this.showNotification('✅ Speech saved successfully', 'success');
+               },
+
+               renderSavedSpeeches() {
+                   const container = this.elements.savedSpeechesList;
+                   
+                   if (state.savedSpeeches.length === 0) {
+                       container.innerHTML = '<p class="text-center" style="color: var(--text-secondary); padding: 20px;">No saved speeches yet</p>';
+                       return;
+                   }
+
+                   container.innerHTML = state.savedSpeeches.map(speech => `
+                       <div class="card" style="margin-bottom: 12px;">
+                           <div style="display: flex; justify-content: space-between; align-items: center;">
+                               <div style="flex: 1;">
+                                   <h4 style="font-size: 0.95rem; margin-bottom: 4px;">${utils.sanitizeHTML(speech.title)}</h4>
+                                   <small style="color: var(--text-secondary);">
+                                       ${speech.wordCount} words | 
+                                       ${utils.formatTime(speech.wordCount / state.settings.wpm)} @ ${state.settings.wpm} WPM |
+                                       ${new Date(speech.updatedAt).toLocaleDateString()}
+                                   </small>
+                               </div>
+                               <div class="btn-group" style="margin-left: 16px;">
+                                   <button class="btn btn-secondary btn-small" onclick="SpeechRateCalculator.loadSpeech('${speech.id}')" style="padding: 6px 12px;">
+                                       📂 Load
+                                   </button>
+                                   <button class="btn btn-danger btn-small" onclick="SpeechRateCalculator.deleteSpeech('${speech.id}')" style="padding: 6px 12px;">
+                                       🗑️
+                                   </button>
+                               </div>
+                           </div>
+                       </div>
+                   `).join('');
+               },
+
+               showLoadDialog() {
+                   if (state.savedSpeeches.length === 0) {
+                       this.showNotification('⚠️ No saved speeches available', 'warning');
+                       return;
+                   }
+                   // The list is always visible, so just scroll to it
+                   this.elements.savedSpeechesList.scrollIntoView({ behavior: 'smooth' });
+               },
+
+               deleteSpeech(id) {
+                   if (confirm('Are you sure you want to delete this speech?')) {
+                       state.savedSpeeches = state.savedSpeeches.filter(s => s.id !== id);
+                       storage.save();
+                       this.renderSavedSpeeches();
+                       this.showNotification('Speech deleted', 'info');
+                   }
+               },
+
+               loadSpeech(id) {
+                   const speech = state.savedSpeeches.find(s => s.id === id);
+                   if (speech) {
+                       state.currentSpeech = {
+                           ...state.currentSpeech,
+                           title: speech.title,
+                           text: speech.text,
+                           wordCount: speech.wordCount,
+                           sentenceCount: speech.stats?.sentenceCount || 0,
+                           stats: speech.stats || {}
+                       };
+
+                       this.elements.speechTitle.value = speech.title;
+                       this.elements.speechText.value = speech.text;
+                       analyzeCurrent();
+                       this.showNotification('✅ Speech loaded', 'success');
+                   }
+               },
+
+               updateUI() {
+                   const speech = state.currentSpeech;
+                   
+                   // Update stats
+                   this.elements.totalTime.textContent = utils.formatTime(speech.totalTime);
+                   this.elements.wordCount.textContent = speech.wordCount.toLocaleString();
+                   this.elements.sentenceCount.textContent = speech.sentenceCount.toLocaleString();
+                   this.elements.avgSentenceLength.textContent = Math.round(speech.stats.avgWordsPerSentence || 0);
+                   this.elements.longestSentence.textContent = speech.stats.longestSentence || 0;
+                   this.elements.readabilityScore.textContent = speech.stats.readability || 0;
+                   
+                   // Update practice stats
+                   this.elements.practiceTime.textContent = utils.formatTime(state.practice.sessionTime);
+                   this.elements.sessionsCount.textContent = state.practice.sessionsCount;
+                   this.elements.accuracyScore.textContent = `${Math.round(state.practice.accuracy)}%`;
+                   
+                   // Update char count
+                   this.elements.charCount.textContent = `${speech.text.length} characters`;
+                   
+                   // Update sentence analysis
+                   this.renderSentenceAnalysis();
+               },
+
+               renderSentenceAnalysis() {
+                   const container = this.elements.sentenceAnalysis;
+                   const sentences = state.currentSpeech.sentences;
+
+                   if (sentences.length === 0) {
+                       container.innerHTML = '<p class="text-center" style="color: var(--text-secondary); padding: 40px;">Enter speech text to see detailed sentence analysis and highlighting</p>';
+                       return;
+                   }
+
+                   container.innerHTML = sentences.map(sentence => `
+                       <div class="sentence-item sentence-${sentence.category}" style="padding: 8px; margin-bottom: 8px; border-radius: 4px;">
+                           <div style="display: flex; justify-content: space-between; align-items: center;">
+                               <div style="flex: 1; margin-right: 12px;">
+                                   <span style="font-family: var(--font-mono);">${utils.sanitizeHTML(sentence.text)}</span>
+                               </div>
+                               <div style="text-align: right; min-width: 120px;">
+                                   <span class="sentence-info">${sentence.wordCount} words</span>
+                                   <span class="sentence-info">${sentence.timeFormatted}</span>
+                                   <span class="sentence-info" style="background: var(--bg-accent); padding: 2px 6px; border-radius: 4px;">
+                                       ${sentence.category === 'long' ? '⚠️ Long' : sentence.category === 'medium' ? '⚡ Medium' : '✓ Good'}
+                                   </span>
+                               </div>
+                           </div>
+                       </div>
+                   `).join('');
+               },
+
+               toggleSettings() {
+                   this.elements.settingsPanel.classList.toggle('active');
+                   this.elements.settingsOverlay.classList.toggle('active');
+               },
+
+               closeSettings() {
+                   this.elements.settingsPanel.classList.remove('active');
+                   this.elements.settingsOverlay.classList.remove('active');
+                   storage.save();
+               },
+
+               setTheme(themeName) {
+                   state.settings.theme = themeName;
+                   document.body.className = `theme-${themeName}`;
+                   this.updateThemeSelection();
+                   storage.save();
+                   this.showNotification(`✅ Theme changed to ${themeName}`, 'success');
+               },
+
+               exportData() {
+                   try {
+                       const data = storage.export();
+                       const filename = `speech-rate-calculator-backup-${new Date().toISOString().split('T')[0]}.json`;
+                       utils.downloadFile(filename, data);
+                       this.showNotification('✅ Data exported successfully', 'success');
+                   } catch (error) {
+                       this.showNotification('❌ Export failed', 'error');
+                   }
+               },
+
+               importData(event) {
+                   const file = event.target.files[0];
+                   if (!file) return;
+
+                   const reader = new FileReader();
+                   reader.onload = (e) => {
+                       try {
+                           const result = storage.import(e.target.result);
+                           this.loadSettings();
+                           this.renderSavedSpeeches();
+                           this.updateUI();
+                           this.showNotification(`✅ Imported ${result.imported} speeches${result.duplicates ? ` (${result.duplicates} duplicates skipped)` : ''}`, 'success');
+                       } catch (error) {
+                           this.showNotification(`❌ Import failed: ${error.message}`, 'error');
+                       }
+                   };
+                   reader.readAsText(file);
+                   event.target.value = '';
+               },
+
+               clearAllData() {
+                   if (confirm('⚠️ WARNING: This will permanently delete ALL saved speeches, settings, and practice data. This cannot be undone. Are you absolutely sure?')) {
+                       if (confirm('🚨 FINAL CONFIRMATION: Type "DELETE ALL" to confirm')) {
+                           state.savedSpeeches = [];
+                           state.practice.sessionsCount = 0;
+                           state.practice.accuracy = 0;
+                           state.practice.sessionTime = 0;
+                           
+                           // Reset settings to defaults
+                           state.settings = {
+                               wpm: 150,
+                               defaultWpm: 150,
+                               highlightThreshold: 25,
+                               theme: 'default',
+                               advancedMode: true
+                           };
+                           
+                           storage.save();
+                           this.loadSettings();
+                           this.renderSavedSpeeches();
+                           this.updateUI();
+                           this.showNotification('🗑️ All data cleared', 'info');
+                       }
+                   }
+               },
+
+               showNotification(message, type = 'info') {
+                   // Remove existing notifications
+                   const existing = document.querySelector('.notification');
+                   if (existing) existing.remove();
+
+                   const notification = document.createElement('div');
+                   notification.className = `notification notification-${type} fade-in`;
+                   notification.style.cssText = `
+                       position: fixed;
+                       top: 20px;
+                       right: 20px;
+                       padding: 16px 20px;
+                       background: var(--bg-surface);
+                       border: 1px solid var(--border-color);
+                       border-radius: var(--border-radius);
+                       box-shadow: var(--shadow-lg);
+                       z-index: 1001;
+                       max-width: 300px;
+                       font-size: 0.875rem;
+                       color: var(--text-primary);
+                   `;
+                   
+                   // Add type-specific styling
+                   if (type === 'success') {
+                       notification.style.borderLeft = '4px solid #34a853';
+                   } else if (type === 'error') {
+                       notification.style.borderLeft = '4px solid #ea4335';
+                   } else if (type === 'warning') {
+                       notification.style.borderLeft = '4px solid #fbbc05';
+                   } else {
+                       notification.style.borderLeft = '4px solid var(--text-accent)';
+                   }
+
+                   notification.textContent = message;
+
+                   // Auto-remove after 3 seconds
+                   setTimeout(() => {
+                       notification.style.opacity = '0';
+                       notification.style.transform = 'translateY(-10px)';
+                       setTimeout(() => notification.remove(), 300);
+                   }, 3000);
+
+                   document.body.appendChild(notification);
+               },
+
+               handleResize() {
+                   // Handle responsive adjustments
+                   if (window.innerWidth <= 768) {
+                       // Mobile adjustments
+                       this.elements.settingsPanel.style.width = '100%';
+                   } else {
+                       this.elements.settingsPanel.style.width = '400px';
+                   }
+               }
+           };
+
+           // ==========================================================================
+           // PRACTICE MODULE
+           // ==========================================================================
+           const practice = {
+               start() {
+                   if (!state.currentSpeech.text.trim()) {
+                       ui.showNotification('⚠️ No speech to practice', 'warning');
+                       return;
+                   }
+
+                   state.practice.isActive = true;
+                   state.practice.startTime = Date.now();
+                   state.practice.isPaused = false;
+                   state.practice.currentParagraph = 0;
+
+                   this.setupPracticeView();
+                   this.startPracticeTimer();
+                   
+                   ui.elements.practiceOverlay.classList.add('active');
+                   ui.showNotification('▶️ Practice mode started', 'success');
+               },
+
+               setupPracticeView() {
+                   const paragraphs = state.currentSpeech.text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+                   ui.elements.practiceText.innerHTML = utils.sanitizeHTML(paragraphs[0] || state.currentSpeech.text);
+                   ui.elements.practiceTitle.textContent = state.currentSpeech.title || 'Practice Mode';
+                   this.updatePracticeStats();
+               },
+
+               startPracticeTimer() {
+                   const interval = setInterval(() => {
+                       if (!state.practice.isActive || state.practice.isPaused) {
+                           clearInterval(interval);
+                           return;
+                       }
+
+                       const elapsed = (Date.now() - state.practice.startTime) / 1000 / 60; // minutes
+                       state.practice.sessionTime = elapsed;
+                       this.updatePracticeStats();
+                   }, 1000);
+               },
+
+               pause() {
+                   state.practice.isPaused = !state.practice.isPaused;
+                   const btn = ui.elements.pausePracticeBtn;
+                   
+                   if (state.practice.isPaused) {
+                       btn.innerHTML = '▶️';
+                       ui.showNotification('⏸️ Practice paused', 'info');
+                   } else {
+                       btn.innerHTML = '⏸️';
+                       state.practice.startTime = Date.now() - (state.practice.sessionTime * 60 * 1000);
+                       this.startPracticeTimer();
+                       ui.showNotification('▶️ Practice resumed', 'success');
+                   }
+               },
+
+               stop() {
+                   if (!state.practice.isActive) return;
+
+                   state.practice.isActive = false;
+                   state.practice.isPaused = false;
+                   
+                   // Increment session counter
+                   state.practice.sessionsCount++;
+                   
+                   // Calculate accuracy (simplified)
+                   const expectedTime = state.currentSpeech.totalTime;
+                   const actualTime = state.practice.sessionTime;
+                   const accuracy = Math.max(0, 100 - (Math.abs(expectedTime - actualTime) / expectedTime) * 100);
+                   state.practice.accuracy = accuracy;
+                   
+                   ui.elements.practiceOverlay.classList.remove('active');
+                   ui.showNotification(`✅ Practice complete! Accuracy: ${Math.round(accuracy)}%`, 'success');
+                   
+                   // Reset practice session time
+                   state.practice.sessionTime = 0;
+                   
+                   storage.save();
+                   ui.updateUI();
+               },
+
+               reset() {
+                   state.practice.currentParagraph = 0;
+                   this.setupPracticeView();
+                   ui.showNotification('🔄 Practice reset', 'info');
+               },
+
+               next() {
+                   const paragraphs = state.currentSpeech.text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+                   if (state.practice.currentParagraph < paragraphs.length - 1) {
+                       state.practice.currentParagraph++;
+                       ui.elements.practiceText.innerHTML = utils.sanitizeHTML(paragraphs[state.practice.currentParagraph]);
+                       this.updatePracticeStats();
+                   }
+               },
+
+               previous() {
+                   if (state.practice.currentParagraph > 0) {
+                       state.practice.currentParagraph--;
+                       const paragraphs = state.currentSpeech.text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+                       ui.elements.practiceText.innerHTML = utils.sanitizeHTML(paragraphs[state.practice.currentParagraph]);
+                       this.updatePracticeStats();
+                   }
+               },
+
+               updatePracticeStats() {
+                   const paragraphs = state.currentSpeech.text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+                   const currentWords = paragraphs[state.practice.currentParagraph]?.split(/\s+/).length || 0;
+                   
+                   ui.elements.practiceStats.textContent = 
+                       `Time: ${utils.formatTime(state.practice.sessionTime)} | ` +
+                       `Words: ${currentWords} | ` +
+                       `Paragraph: ${state.practice.currentParagraph + 1}/${paragraphs.length}`;
+               }
+           };
+
+           // ==========================================================================
+           // METRONOME MODULE
+           // ==========================================================================
+           const metronome = {
+               toggle() {
+                   if (this.isActive) {
+                       this.stop();
+                   } else {
+                       this.start();
+                   }
+               },
+
+               start() {
+                   if (state.metronome.interval) {
+                       this.stop();
+                   }
+
+                   state.metronome.isActive = true;
+                   state.metronome.beat = 0;
+                   state.metronome.bpm = state.settings.wpm;
+                   
+                   ui.elements.metronomeDisplay.classList.remove('hidden');
+                   
+                   const intervalMs = 60000 / state.metronome.bpm;
+                   
+                   state.metronome.interval = setInterval(() => {
+                       if (!state.metronome.isActive) return;
+                       
+                       state.metronome.beat = (state.metronome.beat % 4) + 1;
+                       
+                       // Update UI
+                       ui.elements.metronomeBeat.textContent = state.metronome.beat;
+                       ui.elements.metronomeBeat.classList.add('active');
+                       setTimeout(() => ui.elements.metronomeBeat.classList.remove('active'), 100);
+                       
+                       // Play click sound (using Web Audio API)
+                       this.playClick();
+                   }, intervalMs);
+                   
+                   ui.elements.metronomeBtn.innerHTML = '<span>🎵</span> Stop Metronome';
+               },
+
+               stop() {
+                   state.metronome.isActive = false;
+                   
+                   if (state.metronome.interval) {
+                       clearInterval(state.metronome.interval);
+                       state.metronome.interval = null;
+                   }
+                   
+                   ui.elements.metronomeDisplay.classList.add('hidden');
+                   ui.elements.metronomeBeat.classList.remove('active');
+                   state.metronome.beat = 0;
+                   
+                   ui.elements.metronomeBtn.innerHTML = '<span>🎵</span> Toggle Metronome';
+               },
+
+               adjustBpm(delta) {
+                   state.metronome.bpm = Math.max(60, Math.min(300, state.metronome.bpm + delta));
+                   state.settings.wpm = state.metronome.bpm;
+                   ui.elements.wpmSlider.value = state.settings.wpm;
+                   ui.updateWpmDisplay();
+                   
+                   if (state.metronome.isActive) {
+                       this.stop();
+                       this.start();
+                   }
+               },
+
+               playClick() {
+                   // Create audio context for metronome click
+                   if (!window.AudioContext && !window.webkitAudioContext) return;
+                   
+                   const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                   const oscillator = audioContext.createOscillator();
+                   const gainNode = audioContext.createGain();
+                   
+                   oscillator.connect(gainNode);
+                   gainNode.connect(audioContext.destination);
+                   
+                   oscillator.frequency.setValueAtTime(state.metronome.beat === 1 ? 1000 : 800, audioContext.currentTime);
+                   gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                   gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                   
+                   oscillator.start(audioContext.currentTime);
+                   oscillator.stop(audioContext.currentTime + 0.1);
+               }
+           };
+
+           // ==========================================================================
+           // DEBOUNCED ANALYZER
+           // ==========================================================================
+           const debouncedAnalyzer = utils.debounce(() => analyzeCurrent(), 300);
+
+           function analyzeCurrent() {
+               const text = ui.elements.speechText.value;
+               state.currentSpeech.title = ui.elements.speechTitle.value;
+               
+               analyzer.analyze(text, state.settings.wpm);
+               ui.updateUI();
+           }
+
+           // ==========================================================================
+           // PUBLIC API
+           // ==========================================================================
+           return {
+               // Public methods for UI interactions
+               loadSpeech(id) {
+                   ui.loadSpeech(id);
+               },
+
+               deleteSpeech(id) {
+                   ui.deleteSpeech(id);
+               },
+
+               // Initialize the application
+               init() {
+                   // Load data from storage
+                   storage.load();
+                   
+                   // Initialize UI
+                   ui.initialize();
+                   
+                   // Set initial WPM
+                   state.settings.wpm = state.settings.defaultWpm;
+                   
+                   // Initial analysis if text exists
+                   if (ui.elements.speechText.value.trim()) {
+                       analyzeCurrent();
+                   }
+                   
+                   // Auto-save every 30 seconds
+                   setInterval(() => storage.save(), 30000);
+                   
+                   console.log('Speech Rate Calculator Pro initialized');
+               }
+           };
+       })();
+
+       // ==========================================================================
+       // APPLICATION BOOTSTRAP
+       // ==========================================================================
+       document.addEventListener('DOMContentLoaded', () => {
+           SpeechRateCalculator.init();
+       });
+
+       // Global error handling
+       window.addEventListener('error', (e) => {
+           console.error('Application error:', e.error);
+           // Show user-friendly error message
+           const notification = document.createElement('div');
+           notification.style.cssText = `
+               position: fixed;
+               top: 20px;
+               right: 20px;
+               padding: 16px 20px;
+               background: #ea4335;
+               color: white;
+               border-radius: 8px;
+               box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+               z-index: 1001;
+               max-width: 300px;
+               font-size: 0.875rem;
+           `;
+           notification.textContent = '⚠️ An unexpected error occurred. Please refresh the page.';
+           document.body.appendChild(notification);
+           setTimeout(() => notification.remove(), 5000);
+       });
+   </script>
+</body>
+</html>
